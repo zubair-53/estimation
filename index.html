@@ -159,17 +159,36 @@
 
     resultBox.innerHTML = `
       <h5>Submitted Details:</h5>
-      <ul class="list-group mb-3">
-        <li class="list-group-item"><strong>Full Name:</strong> ${fullName}</li>
-        <li class="list-group-item"><strong>Email:</strong> ${email}</li>
-        <li class="list-group-item"><strong>Mobile:</strong> ${mobile}</li>
-        <li class="list-group-item"><strong>Travel Date:</strong> ${travelDate}</li>
-        <li class="list-group-item"><strong>Package Duration:</strong> ${duration}</li>
-        <li class="list-group-item"><strong>Category:</strong> ${category}</li>
-        <li class="list-group-item"><strong>Number of Persons:</strong> ${numPersons}</li>
-        <li class="list-group-item"><strong>Extra Persons:</strong> ${extraYes ? extraCount : 0}</li>
-        <li class="list-group-item"><strong>Day Type:</strong> ${isSpecial ? 'Special Date' : 'Regular Date'}</li>
-      </ul>
+      <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
+  <div class="col">
+    <div class="list-group-item"><strong>Full Name:</strong> ${fullName}</div>
+  </div>
+  <div class="col">
+    <div class="list-group-item"><strong>Email:</strong> ${email}</div>
+  </div>
+  <div class="col">
+    <div class="list-group-item"><strong>Mobile:</strong> ${mobile}</div>
+  </div>
+  <div class="col">
+    <div class="list-group-item"><strong>Travel Date:</strong> ${travelDate}</div>
+  </div>
+  <div class="col">
+    <div class="list-group-item"><strong>Package Duration:</strong> ${duration}</div>
+  </div>
+  <div class="col">
+    <div class="list-group-item"><strong>Category:</strong> ${category}</div>
+  </div>
+  <div class="col">
+    <div class="list-group-item"><strong>Number of Persons:</strong> ${numPersons}</div>
+  </div>
+  <div class="col">
+    <div class="list-group-item"><strong>Extra Persons:</strong> ${extraYes ? extraCount : 0}</div>
+  </div>
+  <div class="col">
+    <div class="list-group-item"><strong>Day Type:</strong> ${isSpecial ? 'Special Date' : 'Regular Date'}</div>
+  </div>
+</div>
+
       <h5>Price Breakdown:</h5>
       <p><strong>Base (${numPersons} x ₹${twinPrice}):</strong> ₹${totalBase}</p>
       ${extraCount > 0 ? `<p><strong>Extra (${extraCount} x ₹${extraPrice}):</strong> ₹${totalExtra}</p>` : ''}
