@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tour Estimation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .form-section { max-width: 900px; margin: auto; padding: 30px; }
+    .result-box { background-color: #f1f1f1; padding: 20px; margin-top: 20px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <div class="form-section">
+    <h3 class="mb-4">Tour Estimation Form</h3>
+    <form id="tourForm">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Your Full Name</label>
+          <input type="text" class="form-control" name="fullName" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Your Email Address</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Your Mobile Number</label>
+          <input type="tel" class="form-control" name="mobile" pattern="[0-9]{10}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Select Travel Date</label>
+          <input type="date" class="form-control" name="travelDate" min="2025-11-01" max="2026-02-28" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Select Package Duration</label>
+          <select class="form-select" name="duration" required>
+            <option value="">Choose...</option>
+            <option value="1N2D">1N2D</option>
+            <option value="2N3D">2N3D</option>
+            <option value="3N4D">3N4D</option>
+            <option value="4N5D">4N5D</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Select Category</label>
+          <select class="form-select" name="category" required>
+            <option value="">Choose...</option>
+            <option value="Standard">Standard</option>
+            <option value="Deluxe">Deluxe</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Number of Persons</label>
+          <input type="number" class="form-control" name="numPersons" min="1" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Extra Person?</label><br>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="extraPerson" value="yes">
+            <label class="form-check-label">Yes</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="extraPerson" value="no" checked>
+            <label class="form-check-label">No</label>
+          </div>
+          <input type="number" class="form-control mt-2" name="extraCount" min="1" placeholder="How many?" style="display:none;">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-4">Calculate Price</button>
+    </form>
+
+    <div class="result-box mt-4" id="result" style="display:none;"></div>
+  </div>
+
+<!-- (Head section remains the same, just copy from previous code) -->
+<!-- Replace ONLY the script block at the end with the following updated JS -->
+<script>
+  const pricingData = {
+    "1N2D": {
+      "specialDates": [...new Set(["2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-15","2025-11-16","2025-11-17","2025-11-18","2025-12-14","2025-12-15","2025-12-16","2025-12-21","2025-12-22","2025-12-23","2025-12-24","2025-12-25","2025-12-26","2025-12-27","2025-12-28","2025-12-29","2025-12-30","2025-12-31","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-24","2026-01-25","2026-01-26","2026-01-27","2026-01-28","2026-02-14","2026-02-15","2026-02-16","2026-02-23","2026-02-24","2026-02-25"])],
+      "Standard": {
+        regular: { twinSharing: 5200, extraPerson: 3000 },
+        special: { twinSharing: 6000, extraPerson: 3500 }
+      },
+      "Deluxe": {
+        regular: { twinSharing: 6000 },
+        special: { twinSharing: 7000 }
+      }
+    },
+    "2N3D": {
+      "specialDates": [...new Set(["2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-15","2025-11-16","2025-11-17","2025-11-18","2025-12-14","2025-12-15","2025-12-16","2025-12-21","2025-12-22","2025-12-23","2025-12-24","2025-12-25","2025-12-26","2025-12-27","2025-12-28","2025-12-29","2025-12-30","2025-12-31","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-24","2026-01-25","2026-01-26","2026-01-27","2026-01-28","2026-02-14","2026-02-15","2026-02-16","2026-02-23","2026-02-24","2026-02-25"])],
+      "Standard": {
+        regular: { twinSharing: 9500, extraPerson: 5000 },
+        special: { twinSharing: 11000, extraPerson: 6000 }
+      },
+      "Deluxe": {
+        regular: { twinSharing: 11000, extraPerson: 5000 },
+        special: { twinSharing: 12500, extraPerson: 6000 }
+      }
+    },
+    "3N4D": {
+      "specialDates": [...new Set(["2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-15","2025-11-16","2025-11-17","2025-11-18","2025-12-14","2025-12-15","2025-12-16","2025-12-21","2025-12-22","2025-12-23","2025-12-24","2025-12-25","2025-12-26","2025-12-27","2025-12-28","2025-12-29","2025-12-30","2025-12-31","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-24","2026-01-25","2026-01-26","2026-01-27","2026-01-28","2026-02-14","2026-02-15","2026-02-16","2026-02-23","2026-02-24","2026-02-25"])],
+      "Standard": {
+        regular: { twinSharing: 13500, extraPerson: 7000 },
+        special: { twinSharing: 15500, extraPerson: 9000 }
+      },
+      "Deluxe": {
+        regular: { twinSharing: 15000, extraPerson: 7000 },
+        special: { twinSharing: 17000, extraPerson: 9000 }
+      }
+    },
+    "4N5D": {
+      "specialDates": [...new Set(["2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-15","2025-11-16","2025-11-17","2025-11-18","2025-12-14","2025-12-15","2025-12-16","2025-12-21","2025-12-22","2025-12-23","2025-12-24","2025-12-25","2025-12-26","2025-12-27","2025-12-28","2025-12-29","2025-12-30","2025-12-31","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-24","2026-01-25","2026-01-26","2026-01-27","2026-01-28","2026-02-14","2026-02-15","2026-02-16","2026-02-23","2026-02-24","2026-02-25"])],
+      "Standard": {
+        regular: { twinSharing: 17500, extraPerson: 10000 },
+        special: { twinSharing: 20000, extraPerson: 12000 }
+      },
+      "Deluxe": {
+        regular: { twinSharing: 19500, extraPerson: 10000 },
+        special: { twinSharing: 22000, extraPerson: 12000 }
+      }
+    }
+  };
+
+  const form = document.getElementById('tourForm');
+  const resultBox = document.getElementById('result');
+  const extraRadios = form.elements.extraPerson;
+  const extraCountInput = form.elements.extraCount;
+
+  [...extraRadios].forEach(radio => {
+    radio.addEventListener('change', () => {
+      extraCountInput.style.display = radio.value === 'yes' ? 'block' : 'none';
+      if (radio.value === 'no') extraCountInput.value = '';
+    });
+  });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const fullName = formData.get('fullName');
+    const email = formData.get('email');
+    const mobile = formData.get('mobile');
+    const travelDate = formData.get('travelDate');
+    const duration = formData.get('duration');
+    const category = formData.get('category');
+    const numPersons = parseInt(formData.get('numPersons'));
+    const extraYes = formData.get('extraPerson') === 'yes';
+    const extraCount = extraYes ? parseInt(formData.get('extraCount')) || 0 : 0;
+
+    const pkg = pricingData[duration];
+    const isSpecial = pkg.specialDates.includes(travelDate);
+    const priceType = isSpecial ? 'special' : 'regular';
+
+    const twinPrice = pkg[category][priceType].twinSharing || 0;
+    const extraPrice = pkg[category][priceType].extraPerson || 0;
+
+    const totalBase = numPersons * twinPrice;
+    const totalExtra = extraCount * extraPrice;
+    const total = totalBase + totalExtra;
+
+    resultBox.innerHTML = `
+      <h5>Submitted Details:</h5>
+      <ul class="list-group mb-3">
+        <li class="list-group-item"><strong>Full Name:</strong> ${fullName}</li>
+        <li class="list-group-item"><strong>Email:</strong> ${email}</li>
+        <li class="list-group-item"><strong>Mobile:</strong> ${mobile}</li>
+        <li class="list-group-item"><strong>Travel Date:</strong> ${travelDate}</li>
+        <li class="list-group-item"><strong>Package Duration:</strong> ${duration}</li>
+        <li class="list-group-item"><strong>Category:</strong> ${category}</li>
+        <li class="list-group-item"><strong>Number of Persons:</strong> ${numPersons}</li>
+        <li class="list-group-item"><strong>Extra Persons:</strong> ${extraYes ? extraCount : 0}</li>
+        <li class="list-group-item"><strong>Day Type:</strong> ${isSpecial ? 'Special Date' : 'Regular Date'}</li>
+      </ul>
+      <h5>Price Breakdown:</h5>
+      <p><strong>Base (${numPersons} x ₹${twinPrice}):</strong> ₹${totalBase}</p>
+      ${extraCount > 0 ? `<p><strong>Extra (${extraCount} x ₹${extraPrice}):</strong> ₹${totalExtra}</p>` : ''}
+      <hr>
+      <h4>Total Estimated Price: ₹${total}</h4>
+    `;
+    resultBox.style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
